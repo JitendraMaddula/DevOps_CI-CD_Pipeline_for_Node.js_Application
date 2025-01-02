@@ -1,59 +1,89 @@
+
 # DevOps_CI-CD_Pipeline_for_Node.js_Application
 
-Step1
-create file structre
+This project demonstrates a DevOps pipeline for automating the deployment of a Node.js application using Terraform, Ansible, Jenkins, Helm, and Kubernetes.
 
-step 2
-terraform script to create ec2 instance
- commands used terraformm init, terraform plan, terraform apply
+## Steps to Set Up the Pipeline
 
- step3
- ansible script
- commands used mkdir inventory.ini,mkdir site.yml, ansible-galaxy init nodejsapp, ansible-playbook -i inventory.ini site.yml, ansible-playbook -i inventory.ini site.yml -vvv, 
+1. Clone the Git repository:
 
- 
+   ```bash
+   git clone https://github.com/JitendraMaddula/DevOps_CI-CD_Pipeline_for_Node.js_Application.git
+   ```
 
- 1. clone the git repository https://github.com/JitendraMaddula/DevOps_CI-CD_Pipeline_for_Node.js_Application.git
- 2. move to terraform folder and run the commands terraform init, terraform apply
- 3. you can see the terraform script ran successfully by giving output of instance ip and  save those for future reference
- 4. move to ansible folder and update the copied instance ip address in inventory.ini and run the command ansible-playbook -i inventory.ini site.yml -vvv
- 5. ansible script will be ran and initialAdminPassword file will be created with jenkins password
- 5. creat a IAM role with admin access and add this to created instance and also EKS cluster
- 6. connect to  instance and use the below commands
-    to install aws cli:
-    
-        curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" 
-        sudo apt install unzip
-        sudo unzip awscliv2.zip  
-        sudo ./aws/install
-        aws --version
+2. Move to the Terraform folder and run:
 
-    to install helm:
-    
-        curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
-        sudo chmod 700 get_helm.sh
-        sudo ./get_helm.sh
-        helm version --client
-    
-    to install kubectl:
-    
-        curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-        chmod +x kubectl
-        sudo mv kubectl /usr/local/bin/
-        kubectl version --client --output=yaml
-        aws eks update-kubeconfig --region us-east-1  --name nodejs_cluster
-        kubectl create ns nodejs-helm-deployment
+   ```bash
+   terraform init
+   terraform apply
+   ```
 
-        sudo mkdir -p /var/lib/jenkins/.kube
-        sudo cp ~/.kube/config /var/lib/jenkins/.kube/config
-        sudo chown -R jenkins:jenkins /var/lib/jenkins/.kube
-        ls -l /var/lib/jenkins/.kube/config
- 8. open jenkins in ec2 using instance ip with port 8080 and install the required plugins like docker.
- 9. create a new pipeline and paste the jenkins code
+3. The Terraform script will output the instance IP. Save it for future reference.
 
+4. Move to the Ansible folder, update the `inventory.ini` file with the EC2 instance IP, and run:
 
+   ```bash
+   ansible-playbook -i inventory.ini site.yml -vvv
+   ```
 
+   The Ansible script will be executed, and the `initialAdminPassword` file will be created.
 
+5. Create an IAM role with admin access and assign it to the EC2 instance and EKS cluster.
+
+6. Connect to the EC2 instance and run the following commands:
+
+   **To install AWS CLI:**
+
+   ```bash
+   curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+   sudo apt install unzip
+   sudo unzip awscliv2.zip
+   sudo ./aws/install
+   aws --version
+   ```
+
+   **To install Helm:**
+
+   ```bash
+   curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
+   sudo chmod 700 get_helm.sh
+   sudo ./get_helm.sh
+   helm version --client
+   ```
+
+   **To install kubectl:**
+
+   ```bash
+   curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+   chmod +x kubectl
+   sudo mv kubectl /usr/local/bin/
+   kubectl version --client --output=yaml
+   aws eks update-kubeconfig --region us-east-1 --name nodejs_cluster
+   kubectl create ns nodejs-helm-deployment
+   ```
+
+   **Configure Kubernetes for Jenkins:**
+
+   ```bash
+   sudo mkdir -p /var/lib/jenkins/.kube
+   sudo cp ~/.kube/config /var/lib/jenkins/.kube/config
+   sudo chown -R jenkins:jenkins /var/lib/jenkins/.kube
+   ls -l /var/lib/jenkins/.kube/config
+   ```
+
+### Step 8: Jenkins Setup
+1. Open Jenkins using the EC2 instance IP with port 8080.
+2. Install required plugins like Docker.
+3. Create a new Jenkins pipeline and paste the Jenkinsfile content.
+
+### Step 9: Kubernetes & Helm Deployment
+Check the Helm deployment and Kubernetes pods:
+
+```bash
 helm ls -n nodejs-helm-deployment
 kubectl get pods -n nodejs-helm-deployment
-kubectl logs first-nodes-chart-8dd7d6d8d-m6pqf -n nodejs-helm-deployment
+kubectl logs <Pod_Name> -n nodejs-helm-deployment
+```
+
+## Conclusion
+Once you complete the above steps, the DevOps pipeline will be set up for automating the deployment of the Node.js application.
