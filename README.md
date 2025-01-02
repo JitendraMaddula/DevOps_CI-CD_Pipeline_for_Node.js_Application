@@ -1,9 +1,5 @@
 # DevOps_CI-CD_Pipeline_for_Node.js_Application
 
-
-# DevOps_CI-CD_Pipeline_for_Node.js_Application
-
-# DevOps_CI-CD_Pipeline_for_Node.js_Application
 Step1
 create file structre
 
