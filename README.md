@@ -21,6 +21,7 @@ terraform script to create ec2 instance
  5. creat a IAM role with admin access and add this to created instance and also EKS cluster
  6. connect to  instance and use the below commands
     to install aws cli:
+    
         curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" 
         sudo apt install unzip
         sudo unzip awscliv2.zip  
@@ -28,11 +29,14 @@ terraform script to create ec2 instance
         aws --version
 
     to install helm:
+    
         curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
         sudo chmod 700 get_helm.sh
         sudo ./get_helm.sh
         helm version --client
+    
     to install kubectl:
+    
         curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
         chmod +x kubectl
         sudo mv kubectl /usr/local/bin/
@@ -44,8 +48,8 @@ terraform script to create ec2 instance
         sudo cp ~/.kube/config /var/lib/jenkins/.kube/config
         sudo chown -R jenkins:jenkins /var/lib/jenkins/.kube
         ls -l /var/lib/jenkins/.kube/config
- 7. open jenkins in ec2 using instance ip with port 8080 and install the required plugins like docker.
- 8. create a new pipeline and paste the jenkins code
+ 8. open jenkins in ec2 using instance ip with port 8080 and install the required plugins like docker.
+ 9. create a new pipeline and paste the jenkins code
 
 
 
