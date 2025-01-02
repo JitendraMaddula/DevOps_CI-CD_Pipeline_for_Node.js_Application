@@ -1,0 +1,85 @@
+
+    - name: Update apt and install base dependencies
+      apt:
+        update_cache: yes
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - curl
+        - unzip
+        - git
+        - software-properties-common
+      become: yes
+
+    - name: Install curl
+      apt:
+        name: curl
+        state: present
+      become: yes
+
+    - name: Install gnupg
+      apt:
+        name: gnupg
+        state: present
+      become: yes
+
+    - name: Add Jenkins APT keyring
+      shell: "curl -fsSL https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key | sudo tee /usr/share/keyrings/jenkins-keyring.asc"
+      args:
+        executable: /bin/bash
+      become: yes
+
+    - name: Add Jenkins APT repository
+      shell: sudo sh -c 'echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] https://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list'
+      args:
+        executable: /bin/bash
+      become: yes
+
+    - name: Install Java
+      apt:
+        name: openjdk-17-jdk
+        state: present
+      become: yes
+
+    - name: Update package cache
+      apt:
+        update_cache: yes
+      become: yes
+        
+    - name: Install Jenkins
+      apt:
+        name: jenkins
+        state: present
+      become: yes
+
+    - name: Start Jenkins service
+      service:
+        name: jenkins
+        state: started
+        enabled: yes
+      register: jenkins_service
+
+    - name: Retrieve initialAdminPassword file
+      fetch:
+        src: /var/lib/jenkins/secrets/initialAdminPassword
+        dest: "{{ playbook_dir }}/initialAdminPassword"
+        flat: yes
+      become: yes
+
+
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+      become: yes
+
+    - name: Install Docker dependencies
+      apt:
+        name:
+          - docker.io
+          - python3-pip
+          - docker-compose
+        state: present
+      become: yes
+
+    - name: Add Jenkins to Docker
+      shell: sudo usermod -a -G docker jenkins

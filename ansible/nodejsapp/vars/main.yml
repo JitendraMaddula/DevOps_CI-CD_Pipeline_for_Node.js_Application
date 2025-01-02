@@ -1,0 +1,4 @@
+#SPDX-License-Identifier: MIT-0
+---
+# vars file for nodejsapp
+ansible_python_interpreter: /usr/bin/python3  # Ensure Python 3 is used

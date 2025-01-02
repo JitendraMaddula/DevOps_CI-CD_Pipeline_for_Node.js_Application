@@ -1,0 +1,6 @@
+region            = "us-east-1"
+aws_instance_name = "nodejs_app_server"
+repo_name = "nodejs_registry"
+subnet_id_1 = "subnet-02af33cb32983183d"
+subnet_id_2 = "subnet-01bc6067e2bedb56a"
+cluster_name = "nodejs_cluster"

@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1,
+    "name": "Alice",
+    "role": "admin",
+    "email": "alice@example.com",
+    "phoneNumber": "1234567890"
+  },
+  {
+    "id": 2,
+    "name": "Bob",
+    "role": "user",
+    "email": "bob@example.com",
+    "phoneNumber": "9876543210"
+  },
+  {
+    "id": 3,
+    "name": "Jitendra M",
+    "role": "admin",
+    "email": "jittu@ksit.in",
+    "phoneNumber": "7896541230"
+  }
+]
