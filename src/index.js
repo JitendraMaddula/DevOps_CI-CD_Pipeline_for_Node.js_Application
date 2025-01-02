@@ -9,6 +9,11 @@ const app = express();
 const PORT = 3000;
 const DATA_FILE = "data.json";
 
+// Ensure data file exists before starting the server
+if (!fs.existsSync(DATA_FILE)) {
+  fs.writeFileSync(DATA_FILE, JSON.stringify([], null, 2));
+}
+
 // Middleware to parse JSON bodies
 app.use(express.json());
 
@@ -35,11 +40,20 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 // Helper function to read/write JSON file
 const readData = () => {
-  return JSON.parse(fs.readFileSync(DATA_FILE, "utf8"));
+  try {
+    return JSON.parse(fs.readFileSync(DATA_FILE, "utf8"));
+  } catch (error) {
+    console.error("Error reading data file:", error);
+    return [];
+  }
 };
 
 const writeData = (data) => {
-  fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
+  try {
+    fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
+  } catch (error) {
+    console.error("Error writing data file:", error);
+  }
 };
 
 // Validation Middleware
@@ -128,15 +142,19 @@ app.get("/users", (req, res) => {
  *       404:
  *         description: User not found
  */
-app.get("/users/:id", validate([param("id").isInt().withMessage("ID must be an integer")]), (req, res) => {
-  const data = readData();
-  const user = data.find((u) => u.id === parseInt(req.params.id));
-  if (user) {
-    res.json(user);
-  } else {
-    res.status(404).json({ message: "User not found" });
+app.get(
+  "/users/:id",
+  validate([param("id").isInt().withMessage("ID must be an integer")]),
+  (req, res) => {
+    const data = readData();
+    const user = data.find((u) => u.id === parseInt(req.params.id));
+    if (user) {
+      res.json(user);
+    } else {
+      res.status(404).json({ message: "User not found" });
+    }
   }
-});
+);
 
 /**
  * @swagger
@@ -273,9 +291,7 @@ app.delete(
 );
 
 // Start the server
-// Start the server
-app.listen(PORT, '0.0.0.0', () => {
+app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server is running on http://0.0.0.0:${PORT}`);
   console.log(`Swagger documentation available at http://0.0.0.0:${PORT}/api-docs`);
 });
-
